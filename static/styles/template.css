@@ -1,0 +1,41 @@
+html * {
+    font-family: 'Helvetica', 'Arial', sans-serif !important;
+    color: #D5D977 !important;
+}
+
+body {
+    background-color: #172601 !important;
+}
+
+input{
+    background-color: #2C4001 !important;
+
+}
+
+input::placeholder{
+    color: #88A61C !important;
+
+}
+
+select{
+    background-color: #172601 !important;
+}
+
+.logo {
+    width: 15%;
+    height: auto;
+}
+
+.alert-danger{
+    color: #980505 !important;
+}
+
+.alert-success{
+    color: #00830b !important;
+}
+
+.center-block { /* Credit to https://stackoverflow.com/questions/42452477/how-to-center-input-group-inside-a-div for centering code */
+    display: table;  
+    margin-left: auto;
+    margin-right: auto;
+}

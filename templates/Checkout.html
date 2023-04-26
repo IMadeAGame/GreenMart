@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <link rel="stylesheet" href="static/styles/template.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.min.js" integrity="sha384-Atwg2Pkwv9vp0ygtn1JAojH0nYbwNJLPhwyoVbhoPwBhjQPR5VtM2+xf0Uwh9KtT" crossorigin="anonymous"></script>
+    <title>GreenMart</title>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg"> <!--Navbar left and right align from: https://mdbootstrap.com/docs/standard/navigation/navbar/#-->
+        <div class="container-fluid">
+            <!--LEFT LINKS-->
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a href="/"><img src="../static/Logo.png" class = "logo" alt="GreenMart Logo"></a>
+                </li>
+            </ul>
+            <!-- RIGHT LINKS -->
+            <div class="d-flex align-items-center">
+                <a class="text-reset me-3" href="basket"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cart" viewBox="0 0 16 16">
+                    <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+                </svg><% if (cart && cart.length > 0) {%><span class="badge rounded-pill badge-notification bg-success"><%= cart.length %></span><% } %></a>
+                
+                <div class="dropdown">
+                    <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
+                            <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
+                            <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
+                        </svg>
+                    </button>
+                    <ul class="dropdown-menu" style="background-color: #2C4001;" aria-labelledby="dropdownMenuButton1">
+                        <% if (loggedIn) {%>
+                            <li><a class="dropdown-item" href="orders">Orders</a></li>
+                            <li><a class="dropdown-item" href="logout">Log Out</a></li>
+                        <% } else {%>
+                            <li><a class="dropdown-item" href="signin">Log In</a></li>
+                        <% } %>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <% if (response != "") {%>
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#980505" class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2" viewBox="0 0 16 16" role="img" aria-label="Warning:">
+                <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+            </svg>
+            <%= response %>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    <% } %>
+    <form method="post">
+        <div class="containter"> <!--This code is being reused from my retro game store project-->
+            <%  const formatter = new Intl.NumberFormat('en-US', {
+                    style: 'currency',
+                    currency: 'USD',
+                });
+                var sub = 0;
+                for(var i=0; i<cart.length; i++) {
+                    sub +=  products[cart[i][0] - 1]["price"] * cart[i][1];
+                }
+                var tax = sub * 0.06;
+                var tot = sub * 1.06 + shipping;
+            %>
+            <div class="row row-cols-6">
+                <% for(var i=0; i<cart.length; i++) {%>
+                    <div class="col">
+                        <div class="card" style="background-color: #2C4001;">
+                            <img src="../static/<%= products[cart[i][0] - 1]["img"] %>" alt= <%= products[cart[i][0] - 1]["name"] %> >
+                            <h4 class="text-center"><%= products[cart[i][0] - 1]["name"] %></h4>
+                            <p class="text-center">Qty: <%= cart[i][1] %></p>
+                            <p class="text-center">Price: <%= formatter.format(products[cart[i][0] - 1]["price"]) %></p>
+                            <p class="text-center">Total price: <%= formatter.format(products[cart[i][0] - 1]["price"] * cart[i][1]) %></p>
+                        </div>
+                    </div>
+                <% } %>
+            </div>
+            <div class = "text-center">
+                <h1>Totals</h1><br>
+                <h4>Subtotal: <%= formatter.format(sub) %></h4>
+                <h4>Tax: <%= formatter.format(tax) %></h4>
+                <h4>Delivery: <%= formatter.format(shipping) %></h4>
+                <h2>Total: <%= formatter.format(tot) %></h2>
+                <h5>Orders are delivered 30 minutes to an hour after purchase</h5>
+            </div>
+            <hr class="hr hr-blurry"/>
+            <h1 class = "text-center">Billing information</h1><br>
+
+            <div class="input-group mb-3 center-block" style="max-width: 30%;">
+                <div class="form-floating center-block">
+                    <input type="text" class="form-control" id="fname" name="fname" aria-label="First Name" onchange="saveValue('fname', this.value);">
+                    <label for="fname">First name</label>
+                </div>
+                <div class="form-floating center-block">
+                    <input type="text" class="form-control" id="lname" name="lname" aria-label="Last Name" onchange="saveValue('lname', this.value);">
+                    <label for="lname">Last name</label>
+                </div>
+            </div>
+            <div class="input-group mb-3 center-block" style="max-width: 15%;">
+                <div class="form-floating center-block">
+                    <input type="text" class="form-control" id="phone" name="phone" aria-label="First Name" onchange="saveValue('phone', this.value);">
+                    <label for="phone">Phone number</label>
+                </div>
+            </div>
+            <div class="input-group mb-3 center-block" style="max-width: 45%;">
+                <div class="form-floating center-block w-50">
+                    <input type="text" class="form-control" id="address" name="address" aria-label="Street address" onchange="saveValue('address', this.value);">
+                    <label for="address">Street address</label>
+                </div>
+                <div class="form-floating center-block w-25">
+                    <input type="text" class="form-control" id="zip" name="zip" aria-label="Zip code" onchange="saveValue('zip', this.value);">
+                    <label for="zip">Zip code</label>
+                </div>
+                <select class="form-select w-25" name="states" id="states">
+                    <option value="" disabled selected>-State-</option>
+                    <% for(var i=0; i<states.length; i++) {%>
+                    <option value="<%= states[i] %>"><%= states[i] %></option>
+                    <% } %>
+                </select>
+            </div>
+            <h1 class = "text-center">Payment method</h1><br>
+            <div class="input-group mb-3 center-block" style="max-width: 60%;">
+                <div class="form-floating center-block w-85">
+                    <input type="text" class="form-control" id="creditcard" name="creditcard" aria-label="Credit/Debit card number" onchange="saveValue('creditcard', this.value);">
+                    <label for="creditcard">Credit/Debit card number</label>
+                </div>
+                <div class="form-floating center-block w-5">
+                    <input type="text" class="form-control" id="security" name="security" aria-label="Security code" onchange="saveValue('security', this.value);">
+                    <label for="security">Security code</label>
+                </div>
+                <select class="form-select w-5" name="month" id="month">
+                    <option value="" disabled selected>-Month-</option>
+                    <% for(var i=0; i<months.length; i++) {%>
+                        <option value="<%= months[i] %>"><%= months[i] %></option>
+                    <% } %>
+                </select>
+                <select class="form-select w-5" name="year" id="year">
+                    <option value="" disabled selected>-Year-</option>
+                    <% for(var i=0; i<years.length; i++) {%>
+                        <option value="<%= years[i] %>"><%= years[i] %></option>
+                    <% } %>
+                </select>
+            </div><br>
+            <div class="text-center">
+                <button type="submit" class="btn btn-success btn-lg ">Checkout</button>
+            </div>
+            <script type="text/javascript">
+                // CODE FROM: https://stackoverflow.com/questions/38930144/keep-input-value-after-refresh-page
+                document.getElementById("fname").value = getSavedValue("fname");    // set the value to this input
+                document.getElementById("lname").value = getSavedValue("lname");   // set the value to this input
+                document.getElementById("phone").value = getSavedValue("phone");   // set the value to this input
+                document.getElementById("address").value = getSavedValue("address");   // set the value to this input
+                document.getElementById("zip").value = getSavedValue("zip");   // set the value to this input
+                document.getElementById("creditcard").value = getSavedValue("creditcard");   // set the value to this input
+                document.getElementById("security").value = getSavedValue("security");   // set the value to this input
+                /* Here you can add more inputs to set value. if it's saved */
+        
+                //Save the value function - save it to localStorage as (ID, VALUE)
+                function saveValue(id, val){
+                    localStorage.setItem(id, val);// Every time user writing something, the localStorage's value will override .
+                }
+        
+                //get the saved value function - return the value of "v" from localStorage.
+                function getSavedValue(v){
+                    if (!localStorage.getItem(v)) {
+                        return "";// You can change this to your defualt value.
+                    }
+                    return localStorage.getItem(v);
+                }
+            </script>
+        </div>
+    </form>
+</body>
+</html>

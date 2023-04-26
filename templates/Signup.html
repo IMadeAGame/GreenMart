@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="static/styles/template.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.min.js" integrity="sha384-Atwg2Pkwv9vp0ygtn1JAojH0nYbwNJLPhwyoVbhoPwBhjQPR5VtM2+xf0Uwh9KtT" crossorigin="anonymous"></script>
+    <meta name="viewport" content="width=device-width">
+    <title>GreenMart</title>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg"> <!--Navbar left and right align from: https://mdbootstrap.com/docs/standard/navigation/navbar/#-->
+        <div class="container-fluid">
+            <!--LEFT LINKS-->
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a href="/"><img src="../static/Logo.png" class = "logo" alt="GreenMart Logo"></a>
+                </li>
+            </ul>
+            <!-- RIGHT LINKS -->
+            <div class="d-flex align-items-center">
+                <a class="text-reset me-3" href="basket"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cart" viewBox="0 0 16 16">
+                    <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+                </svg><% if (cart && cart.length > 0) {%><span class="badge rounded-pill badge-notification bg-success"><%= cart.length %></span><% } %></a>
+            </div>
+        </div>
+    </nav>
+    <% if (response != "") {%>
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#980505" class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2" viewBox="0 0 16 16" role="img" aria-label="Warning:">
+                <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+            </svg>
+            <%= response %>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    <% } %>
+    <form name="signUp" method="post">
+        <div class="text-center">
+            <h1>Create an account</h1>
+            <div class="form-floating center-block w-25">
+                <input type="text" class="form-control" name="name" id="name">
+                <label for="name">Name</label>
+            </div>
+            <div class="form-floating center-block w-25">
+                <input type="email" class="form-control" name="email" id="email">
+                <label for="email">Email address</label>
+            </div>
+            <div class="form-floating center-block w-25">
+                <input type="password" class="form-control" name="pass" id="pass">
+                <label for="pass">Password (must be 8 characters)</label>
+            </div>
+            <div class="form-floating center-block w-25">
+                <input type="password" class="form-control" name="cpass" id="cpass">
+                <label for="cpass">Confirm password</label>
+            </div>
+            <br>
+            <button type="submit" class="btn btn-success">Create your account</button>
+            <br><br>
+            <strong>Already have an account? <a href="signin">Sign in!</a></strong>
+        </div>
+    </form>
+</body>
+</html>
